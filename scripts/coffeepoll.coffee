@@ -27,6 +27,12 @@ module.exports = (bot) ->
   brain.set("options", options)
   brain.set("votes", votes)
 
+  isPollNotStarted = -> _.isEmpty(options)
+
+  isUserAlreadyVoted = (username) -> participants[username]
+
+  isVoteNotValid = (vote) -> typeof votes[vote] == 'undefined'
+
   bot.respond /coffeepoll near (.*)/i, (res) ->
     place = res.match[1]
     brain.set("near", place)
@@ -39,9 +45,7 @@ module.exports = (bot) ->
       radius: 1000
 
     foursquare.venues.search params, (error, payload) ->
-      if (error)
-        res.send(error)
-        return
+      return res.send(error) if (error)
       
       message = messages.hello(bot.name)
       coffeeShops = _.sample(payload.response.venues, 3)
@@ -55,25 +59,19 @@ module.exports = (bot) ->
       res.send(message)
 
   bot.respond /coffeepoll vote (.*)/i, (res) ->
-    if (_.isEmpty(options))
-      res.send(messages.errorStart)
-      return
-
     username = res.message.user.name.toLowerCase()
-
-    if (participants[username])
-      res.send(messages.errorAlreadyVoted(username))
-      return
-
     number = res.match[1]
+
+    return res.send(messages.errorAlreadyVoted(username)) if (isUserAlreadyVoted(username))
+    return res.send(messages.errorStart(bot.name)) if (isPollNotStarted())
+    return res.send(messages.errorVote) if (isVoteNotValid(number))
+
     votes[number] += 1
-    participants[username] = true 
+    participants[username] = true
     res.send(messages.thanks)
 
   bot.respond /coffeepoll finish/i, (res) ->
-    if (_.isEmpty(options))
-      res.send(messages.errorStart)
-      return
+    return res.send(messages.errorStart(bot.name)) if (isPollNotStarted())
 
     greater = _.last(votes.slice().sort())
     winner = options[_.indexOf(votes, greater)]
@@ -85,8 +83,6 @@ module.exports = (bot) ->
 
   bot.respond /coffeepoll partial/i, (res) ->
     message = messages.partial
-
-    for option, i in options
-      message += "#{options[i].name}: #{votes[i]} vote(s)\n"
+    message += "#{options[i].name}: #{votes[i]} vote(s)\n" 
 
     res.send(message)

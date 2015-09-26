@@ -29,6 +29,8 @@ module.exports =
   places: (place) ->
     "Ok ! your next polls will consider places near #{place}"
 
+  errorVote: "Hey dude, this options doesn't exist. Are you trying to be funny or what ?"
+
   errorStart: (name) ->
     "There's no poll started. To start a poll type \"@#{name} coffeepoll start\"."
 
