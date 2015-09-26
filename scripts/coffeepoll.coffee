@@ -63,7 +63,7 @@ module.exports = (bot) ->
 
     return res.send(messages.errorAlreadyVoted(username)) if (isUserAlreadyVoted(username))
     return res.send(messages.errorStart(bot.name)) if (isPollNotStarted())
-    return res.send(messages.errorVote) if (isVoteNotValid(number))
+    return res.send(messages.errorVoteNotFound) if (isVoteNotValid(number))
 
     votes[number] += 1
     participants[username] = true
