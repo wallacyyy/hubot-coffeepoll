@@ -1,14 +1,13 @@
-# Public: Duplicate some text an arbitrary number of times.
+# Description:
+#   Help your team to find a place to drink a coffee !
+#   Coffeepoll will create poll with random coffee shops nearby.
 #
-# text  - The String to be duplicated.
-# count - The Integer number of times to duplicate the text.
-#
-# Examples
-#
-#   multiplex('Tom', 4)
-#   # => 'TomTomTomTom'
-#
-# Returns the duplicated String.
+# Commands:
+#   hubot coffeepoll near <text> - Configure the place for next polls 
+#   hubot coffeepoll start - Start the poll
+#   hubot coffeepoll vote <number> - Vote in one of poll options
+#   hubot coffeepoll partial - Show the partial results
+#   hubot coffeepoll finish - Finish the poll
 
 _ = require("lodash")
 messages = require("./messages")

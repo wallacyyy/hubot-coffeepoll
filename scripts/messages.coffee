@@ -1,14 +1,14 @@
-# Public: Duplicate some text an arbitrary number of times.
+# Description:
+#   Coffeepoll messages sent by the bot. 
 #
-# text  - The String to be duplicated.
-# count - The Integer number of times to duplicate the text.
+# Example:
+#  messages = require("messages")
 #
-# Examples
-#
-#   multiplex('Tom', 4)
-#   # => 'TomTomTomTom'
-#
-# Returns the duplicated String.
+#  messages.url
+#  => "https://www.foursquare.com/v/"
+#      
+#  messages.places('Berlin')    
+#  => "Ok ! your next polls will consider places near Berlin"
 
 module.exports =
   url: "https://www.foursquare.com/v/"
@@ -27,7 +27,7 @@ module.exports =
     "\nThe winner is ...\n#{winner.name} at #{winner.location.address} !\nEnjoy your coffee :)"
 
   places: (place) ->
-    "Ok ! your next polls will consider places near #{place}"
+    "Ok ! your next polls will consider places near #{place}."
 
   errorVote: "Hey dude, this options doesn't exist. Are you trying to be funny or what ?"
 
