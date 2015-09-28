@@ -1,18 +1,16 @@
-/*
- * Description:
- *   Help your team to find a place to drink a coffee !
- *   Coffeepoll will create poll with random coffee shops nearby.
- *
- * Commands:
- *   hubot coffeepoll near <text> - Configure the place for next polls
- *   hubot coffeepoll start - Start the poll
- *   hubot coffeepoll vote <number> - Vote in one of poll options
- *   hubot coffeepoll partial - Show the partial results
- *   hubot coffeepoll finish - Finish the poll
- */
+// Description:
+//   Help your team to find a place to drink a coffee !
+//   Coffeepoll will create poll with random coffee shops nearby.
+//
+// Commands:
+//   hubot coffeepoll near <text> - Configure the place for next polls
+//   hubot coffeepoll start - Start the poll
+//   hubot coffeepoll vote <number> - Vote in one of poll options
+//   hubot coffeepoll partial - Show the partial results
+//   hubot coffeepoll finish - Finish the poll
 
 var _ = require('lodash')
-var messages = require('./messages')
+var messages = require('../lib/messages')
 
 if (process.env.ENV !== 'production') { require('dotenv').load() }
 
@@ -44,6 +42,7 @@ module.exports = function (bot) {
 
   bot.respond(/coffeepoll near (.*)/i, function (res) {
     var place = res.match[1]
+
     brain.set('near', place)
 
     return res.send(messages.places(place))
@@ -101,6 +100,8 @@ module.exports = function (bot) {
   })
 
   return bot.respond(/coffeepoll partial/i, function (res) {
+    if (isPollNotStarted()) { return res.send(messages.errorStart(bot.name)) }
+
     var message = messages.partial
 
     for (var i = 0; i < options.length; i++) {

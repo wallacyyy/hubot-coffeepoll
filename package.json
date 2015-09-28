@@ -4,9 +4,20 @@
   "private": true,
   "author": "Leonardo Couto <leonardowrc@gmail.com>",
   "description": "A simple helpful robot for your Company",
+  "scripts": {
+    "test": "mocha --compilers coffee:coffee-script tests"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it",
+      "beforeEach",
+      "afterEach"
+    ]
+  },
   "dependencies": {
-    "dotenv": "^1.2.0",
     "hubot": "^2.16.0",
+    "hubot-auth": "^1.2.0",
     "hubot-diagnostics": "0.0.1",
     "hubot-google-images": "^0.2.1",
     "hubot-google-translate": "^0.2.0",
@@ -25,5 +36,15 @@
   },
   "engines": {
     "node": "4.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "coffee-script": "^1.10.0",
+    "dotenv": "^1.2.0",
+    "hubot-mock-adapter": "^1.0.0",
+    "hubot-test-helper": "0.0.7",
+    "mocha": "^2.3.3",
+    "nock": "^2.13.0",
+    "sinon": "^1.17.1"
   }
 }
