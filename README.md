@@ -1,5 +1,5 @@
 # Hubot-coffeepoll
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard) [![Build Status](https://travis-ci.org/wallacyyy/hubot-coffeepoll.svg)](https://travis-ci.org/wallacyyy/hubot-coffeepoll)
 
 Hubot-coffeepoll is a Hubot plugin that helps your team to decide where to drink a coffee.
 The hubot will search for coffee shops nearby and show options to people in the chat vote.
