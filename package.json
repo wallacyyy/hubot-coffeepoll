@@ -1,9 +1,9 @@
 {
-  "name": "huboty",
-  "version": "0.0.0",
-  "private": true,
+  "name": "hubot-coffepoll",
+  "version": "1.0.0",
   "author": "Leonardo Couto <leonardowrc@gmail.com>",
-  "description": "A simple helpful robot for your Company",
+  "license": "MIT",
+  "description": "A hubot plugin to help your team to choose where to drink a coffee ! :coffee:",
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script tests"
   },
@@ -16,28 +16,13 @@
       "afterEach"
     ]
   },
-  "dependencies": {
-    "hubot": "^2.16.0",
-    "hubot-auth": "^1.2.0",
-    "hubot-diagnostics": "0.0.1",
-    "hubot-google-images": "^0.2.1",
-    "hubot-google-translate": "^0.2.0",
-    "hubot-help": "^0.1.1",
-    "hubot-heroku-keepalive": "^1.0.0",
-    "hubot-maps": "0.0.2",
-    "hubot-pugme": "^0.1.0",
-    "hubot-redis-brain": "0.0.3",
-    "hubot-reload-scripts": "^0.1.2",
-    "hubot-rules": "^0.1.1",
-    "hubot-scripts": "^2.16.2",
-    "hubot-shipit": "^0.2.0",
-    "hubot-slack": "^3.3.0",
+  "dependencies": {},
+  "peerDependencies": {
     "lodash": "^3.10.1",
+    "hubot": "^2.16.0",
     "node-foursquare-venues": "^1.1.0"
   },
-  "engines": {
-    "node": "4.1.0"
-  },
+  "main": "./index",
   "devDependencies": {
     "chai": "^3.3.0",
     "coffee-script": "^1.10.0",
