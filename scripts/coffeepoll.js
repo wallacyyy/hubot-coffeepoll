@@ -28,6 +28,14 @@ module.exports = function (bot) {
   brain.set('options', options)
   brain.set('votes', votes)
 
+  var clearPoll = function () {
+    options.length = 0
+    votes.length = 0
+    _.mapKeys(participants, function (v, k) {
+      delete participants[k]
+    })
+  }
+
   var isPollNotStarted = function () {
     return _.isEmpty(options)
   }
@@ -55,7 +63,7 @@ module.exports = function (bot) {
       radius: 1000
     }
 
-    foursquare.venues.search(params, function (error, payload) {
+    return foursquare.venues.search(params, function (error, payload) {
       if (error) { return res.send(error) }
 
       var message = messages.hello(bot.name)
@@ -92,14 +100,12 @@ module.exports = function (bot) {
 
     var greater = _.last(votes.slice().sort())
     var winner = options[_.indexOf(votes, greater)]
+    clearPoll()
 
-    res.send(messages.win(winner))
-    options = []
-    votes = []
-    participants = {}
+    return res.send(messages.win(winner))
   })
 
-  return bot.respond(/coffeepoll partial/i, function (res) {
+  bot.respond(/coffeepoll partial/i, function (res) {
     if (isPollNotStarted()) { return res.send(messages.errorStart(bot.name)) }
 
     var message = messages.partial

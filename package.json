@@ -10,6 +10,7 @@
   "standard": {
     "globals": [
       "describe",
+      "context",
       "it",
       "beforeEach",
       "afterEach"
