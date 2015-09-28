@@ -7,6 +7,22 @@
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script tests"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wallacyyy/hubot-coffeepoll"
+  },
+  "bugs": {
+    "url": "https://github.com/wallacyyy/hubot-coffeepoll/issues"
+  },
+  "keywords": [
+    "hubot",
+    "bot",
+    "plugin",
+    "foursquare",
+    "javascript",
+    "coffee",
+    "chat"
+  ],
   "standard": {
     "globals": [
       "describe",
