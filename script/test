@@ -3,4 +3,4 @@
 # bootstrap environment
 source script/bootstrap
 
-mocha --compilers coffee:coffee-script tests
+mocha --compilers coffee:coffee-script

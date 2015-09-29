@@ -1,11 +1,11 @@
 {
   "name": "hubot-coffeepoll",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Leonardo Couto <leonardowrc@gmail.com>",
   "license": "MIT",
   "description": "A hubot plugin to help your team to choose where to drink a coffee !",
   "scripts": {
-    "test": "mocha --compilers coffee:coffee-script tests"
+    "test": "mocha --compilers coffee:coffee-script"
   },
   "repository": {
     "type": "git",
@@ -34,18 +34,23 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "lodash": "^3.10.1",
-    "hubot": "^2.13.0",
-    "node-foursquare-venues": "^1.1.0"
+    "hubot": "2.x",
+    "node-foursquare-venues": "^1.1.0",
+    "lodash": "^3.10.1"
   },
   "main": "./index",
   "devDependencies": {
-    "chai": "^3.3.0",
-    "coffee-script": "^1.10.0",
+    "chai": "^2.1.1",
+    "coffee-script": "1.6.3",
     "dotenv": "^1.2.0",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-mocha-test": "~0.12.7",
+    "grunt-release": "~0.11.0",
+    "hubot": "2.x",
     "hubot-test-helper": "0.0.7",
-    "mocha": "^2.3.3",
-    "nock": "^2.13.0",
-    "sinon": "^1.17.1"
+    "matchdep": "^1.0.0",
+    "nock": "^2.13.0"
   }
 }
