@@ -2,14 +2,15 @@ var fs = require('fs')
 var path = require('path')
 
 module.exports = function (robot) {
-  var scriptsPath = path.resolve(__dirname, 'scripts')
+  var scriptsPath = path.resolve(__dirname, 'src')
 
-  return fs.exists(scriptsPath, function (exists) {
+  fs.exists(scriptsPath, function (exists) {
     if (exists) {
-      var files = fs.readdirSync(scriptsPath)
+      var ref = fs.readdirSync(scriptsPath)
 
-      for (var i = 0; i < files.length; i++) {
-        robot.loadFile(scriptsPath, files[i])
+      for (var i = 0; i < ref.length; i++) {
+        var script = ref[i]
+        robot.loadFile(scriptsPath, script)
       }
     }
   })

@@ -12,7 +12,7 @@
 var _ = require('lodash')
 var messages = require('../lib/messages')
 
-if (process.env.ENV !== 'production') { require('dotenv').load() }
+if (process.env.NODE_ENV === 'development') { require('dotenv').load() }
 
 var foursquare = require('node-foursquare-venues')(process.env.FOURSQUARE_CLIENT_ID,
                                                    process.env.FOURSQUARE_CLIENT_SECRET)

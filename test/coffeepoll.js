@@ -1,3 +1,5 @@
+require('coffee-script')
+
 var Helper = require('hubot-test-helper')
 var helper = new Helper('../src/coffeepoll.js')
 var messages = require('../lib/messages')
