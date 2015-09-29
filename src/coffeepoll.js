@@ -57,6 +57,8 @@ module.exports = function (bot) {
   })
 
   bot.respond(/coffeepoll start/i, function (res) {
+    if (!isPollNotStarted()) return res.send(messages.errorAlreadyStarted)
+
     var params = {
       near: brain.get('near'),
       categoryId: messages.category,
@@ -64,7 +66,7 @@ module.exports = function (bot) {
     }
 
     return foursquare.venues.search(params, function (error, payload) {
-      if (error) { return res.send(error) }
+      if (error) return res.send(error)
 
       var message = messages.hello(bot.name)
       var coffeeShops = _.sample(payload.response.venues, 3)
@@ -85,9 +87,9 @@ module.exports = function (bot) {
     var username = res.message.user.name.toLowerCase()
     var number = res.match[1]
 
-    if (isUserAlreadyVoted(username)) { return res.send(messages.errorAlreadyVoted(username)) }
-    if (isPollNotStarted()) { return res.send(messages.errorStart(bot.name)) }
-    if (isVoteNotValid(number)) { return res.send(messages.errorVoteNotFound) }
+    if (isUserAlreadyVoted(username)) return res.send(messages.errorAlreadyVoted(username))
+    if (isPollNotStarted()) return res.send(messages.errorStart(bot.name))
+    if (isVoteNotValid(number)) return res.send(messages.errorVoteNotFound)
 
     votes[number] += 1
     participants[username] = true
@@ -96,7 +98,7 @@ module.exports = function (bot) {
   })
 
   bot.respond(/coffeepoll finish/i, function (res) {
-    if (isPollNotStarted()) { return res.send(messages.errorStart(bot.name)) }
+    if (isPollNotStarted()) return res.send(messages.errorStart(bot.name))
 
     var greater = _.last(votes.slice().sort())
     var winner = options[_.indexOf(votes, greater)]
@@ -106,7 +108,7 @@ module.exports = function (bot) {
   })
 
   bot.respond(/coffeepoll partial/i, function (res) {
-    if (isPollNotStarted()) { return res.send(messages.errorStart(bot.name)) }
+    if (isPollNotStarted()) return res.send(messages.errorStart(bot.name))
 
     var message = messages.partial
 

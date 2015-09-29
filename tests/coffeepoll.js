@@ -106,15 +106,13 @@ describe('coffeepoll', function () {
       expect(this.brain.votes[0]).to.eql(1)
     })
 
-    it('tries to vote in a option that does not exist', function () {
+    it('tries to start another poll before finish it', function () {
       var bot = 'hubot'
       var user = 'username'
-      var msg = '@hubot coffeepoll vote 99'
 
-      this.room.user.say(user, msg)
+      this.room.user.say(user, '@hubot coffeepoll start')
 
-      expect(_.last(this.room.messages)).to.eql([bot, messages.errorVoteNotFound])
-      expect(this.brain.votes).to.eql([0, 0, 0])
+      expect(_.last(this.room.messages)).to.eql([bot, messages.errorAlreadyStarted])
     })
 
     it('tries to vote in a option that does not exist', function () {
