@@ -1,6 +1,6 @@
 {
   "name": "hubot-coffepoll",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Leonardo Couto <leonardowrc@gmail.com>",
   "license": "MIT",
   "description": "A hubot plugin to help your team to choose where to drink a coffee !",
