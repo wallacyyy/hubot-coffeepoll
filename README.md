@@ -6,7 +6,9 @@ The hubot will search for coffee shops nearby and show options to people in the 
 
 ## Configuration
 
-You just need to register at [Foursquare](https://developer.foursquare.com/) and set your credentials on this environment variables:
+### Foursquare
+
+You need to register at [Foursquare](https://developer.foursquare.com/) and set your credentials on this environment variables:
 
 ```
 FOURSQUARE_CLIENT_ID = xxx
@@ -16,35 +18,52 @@ FOURSQUARE_CLIENT_SECRET = xxx
 To run it locally just set this variables on a .env file in the project root and load it with
 a library like [```dotenv```](https://www.npmjs.com/package/dotenv).
 
+### Install
+
+Install the plugin:
+
+```
+npm install hubot-coffeepoll --save
+```
+
+And add it to your ```external-scripts.json``` file:
+
+```
+[
+  ...
+  "hubot-coffeepoll"
+  ...
+]
+```
+
 ## Usage 
 
-### Configure the place for next polls
+### Configuring the place for next polls
 ```
 hubot coffeepoll near <text>
 ```
 Examples:
 ```
-hubot coffeepoll near Friedrichstraße
 hubot coffeepoll near Champs-Elysées
 hubot coffeepoll near my street
 ```
 
-### Start the poll
+### Starting the poll
 ```
 hubot coffeepoll start 
 ```
 
-### Vote in one of poll options
+### Voting
 ```
 hubot coffeepoll vote <number>
 ```
 
-### Show the partial results
+### Showing the partial results
 ```
 hubot coffeepoll partial
 ```
 
-### Finish the poll and show the winner
+### Finishing the poll and announcing the winner
 ```
 hubot coffeepoll finish
 ```
