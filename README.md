@@ -47,24 +47,24 @@ Examples:
 hubot coffeepoll near Champs-Elysées
 hubot coffeepoll near my street
 ```
-
+![](http://ditrospecta.com/images/2015-10-03-hubot-plugin/plugin-near-gif.gif)
 ### Starting the poll
 ```
 hubot coffeepoll start 
 ```
-
+![](http://ditrospecta.com/images/2015-10-03-hubot-plugin/plugin-start-gif.gif)
 ### Voting
 ```
 hubot coffeepoll vote <number>
 ```
-
+![](http://ditrospecta.com/images/2015-10-03-hubot-plugin/plugin-vote-gif.gif)
 ### Showing the partial results
 ```
 hubot coffeepoll partial
 ```
-
+![](http://ditrospecta.com/images/2015-10-03-hubot-plugin/plugin-partial-gif.gif)
 ### Finishing the poll and announcing the winner
 ```
 hubot coffeepoll finish
 ```
-
+![](http://ditrospecta.com/images/2015-10-03-hubot-plugin/plugin-finish-gif.gif)
