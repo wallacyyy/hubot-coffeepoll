@@ -59,13 +59,15 @@ module.exports = function (bot) {
   bot.respond(/coffeepoll start/i, function (res) {
     if (!isPollNotStarted()) return res.send(messages.errorAlreadyStarted)
 
+    var near = brain.get('near')
     var params = {
-      near: brain.get('near'),
+      near: near,
       categoryId: messages.category,
       radius: 1000
     }
 
     return foursquare.venues.search(params, function (error, payload) {
+      if (error === 400) return res.send(messages.errorPlaceNotFound(near))
       if (error) return res.send(error)
 
       var message = messages.hello(bot.name)

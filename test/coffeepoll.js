@@ -39,6 +39,14 @@ describe('coffeepoll', function () {
     }
   }
 
+  var error = {
+    response: {
+      meta: {
+        code: 400
+      }
+    }
+  }
+
   beforeEach(function (done) {
     this.room = helper.createRoom()
     this.brain = this.room.robot.brain.data._private
@@ -79,6 +87,26 @@ describe('coffeepoll', function () {
     pollStartedTest('partial', this.room)
   })
 
+  context('api returning a error', function () {
+    beforeEach(function (done) {
+      nock.cleanAll()
+      nock('https://api.foursquare.com')
+        .get('/v2/venues/search')
+        .query(true)
+        .reply(400, error)
+
+      this.room.user.say('username', '@hubot coffeepoll start')
+      setTimeout(done, 50)
+    })
+
+
+    it('tries to start a poll in a place with no shops nearby', function () {
+      expect(this.brain.options).to.eql([])
+      expect(_.last(this.room.messages)).to.eql(['hubot', messages.errorPlaceNotFound(this.brain.near)])
+    })
+
+  })
+
   context('with a poll started', function () {
     beforeEach(function (done) {
       this.room.user.say('username', '@hubot coffeepoll start')
@@ -95,14 +123,13 @@ describe('coffeepoll', function () {
     })
 
     it('tries to vote twice', function () {
-      var bot = 'hubot'
       var user = 'username'
       var msg = '@hubot coffeepoll vote 0'
 
       this.room.user.say(user, msg)
       this.room.user.say(user, msg)
 
-      expect(_.last(this.room.messages)).to.eql([bot, messages.errorAlreadyVoted(user)])
+      expect(_.last(this.room.messages)).to.eql(['hubot', messages.errorAlreadyVoted(user)])
       expect(this.brain.votes[0]).to.eql(1)
     })
 
