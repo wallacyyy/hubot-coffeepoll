@@ -109,6 +109,10 @@ module.exports = function (bot) {
     return res.send(messages.win(winner))
   })
 
+  bot.respond(/coffeepoll help/i, function (res) {
+    return res.send(messages.help)
+  })
+
   bot.respond(/coffeepoll partial/i, function (res) {
     if (isPollNotStarted()) return res.send(messages.errorStart(bot.name))
 

@@ -65,6 +65,11 @@ describe('coffeepoll', function () {
     nock.cleanAll()
   })
 
+  it('shows all commands', function () {
+    this.room.user.say('username', '@hubot coffeepoll help')
+    expect(_.last(this.room.messages)).to.eql(['hubot', messages.help])
+  })
+
   it('starts with a default place configured', function () {
     expect(this.brain.near).to.be.a('string')
   })
