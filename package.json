@@ -32,16 +32,19 @@
       "afterEach"
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "node-foursquare-venues": "^1.1.0"
+  },
+  "peerDependencies": {
+    "hubot": "2.x"
+  },
   "main": "./index",
   "devDependencies": {
     "chai": "^2.1.1",
     "coffee-script": "1.6.3",
-    "hubot": "2.x",
     "hubot-test-helper": "0.0.7",
-    "lodash": "^3.10.1",
     "mocha": "^2.3.3",
-    "nock": "^2.13.0",
-    "node-foursquare-venues": "^1.1.0"
+    "nock": "^2.13.0"
   }
 }
