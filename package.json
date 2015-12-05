@@ -42,7 +42,6 @@
   "devDependencies": {
     "chai": "^2.1.1",
     "coffee-script": "1.6.3",
-    "dotenv": "^1.2.0",
     "hubot": "2.x",
     "hubot-test-helper": "0.0.7",
     "mocha": "^2.3.3",
