@@ -104,12 +104,10 @@ describe('coffeepoll', function () {
       setTimeout(done, 50)
     })
 
-
     it('tries to start a poll in a place with no shops nearby', function () {
       expect(this.brain.options).to.eql([])
       expect(_.last(this.room.messages)).to.eql(['hubot', messages.errorPlaceNotFound(this.brain.near)])
     })
-
   })
 
   context('with a poll started', function () {
