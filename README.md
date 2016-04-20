@@ -45,6 +45,13 @@ hubot coffeepoll near Champs-Elysées
 hubot coffeepoll near my street
 ```
 ![](http://ditrospecta.com/images/2015-10-03-hubot-plugin/plugin-near-gif.gif)
+```
+hubot coffeepoll radius <number>
+```
+Example:
+```
+hubot coffeepoll radius 500
+```
 ### Starting the poll
 ```
 hubot coffeepoll start 
