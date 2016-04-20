@@ -70,6 +70,34 @@ describe('coffeepoll', function () {
     expect(_.last(this.room.messages)).to.eql(['hubot', messages.help])
   })
 
+  it('tries to set a radius with something that is not a number', function () {
+    this.room.user.say('username', '@hubot coffeepoll radius arandomword')
+    expect(_.last(this.room.messages)).to.eql(['hubot', messages.errorRadiusNotValid])
+    expect(this.brain.radius).to.eql(500)
+  })
+
+  it('tries to set a radius with a not valid number', function () {
+    this.room.user.say('username', '@hubot coffeepoll radius -5599')
+    expect(_.last(this.room.messages)).to.eql(['hubot', messages.errorRadiusNotValid])
+    expect(this.brain.radius).to.eql(500)
+  })
+
+  it('configure search radius', function () {
+    this.room.user.say('username', '@hubot coffeepoll radius 100')
+    expect(_.last(this.room.messages)).to.eql(['hubot', messages.radiusUpdated(100)])
+    expect(this.brain.radius).to.eql(100)
+  })
+
+  it('rounds search radius', function () {
+    this.room.user.say('username', '@hubot coffeepoll radius 22.2')
+    expect(_.last(this.room.messages)).to.eql(['hubot', messages.radiusUpdated(22)])
+    expect(this.brain.radius).to.eql(22)
+  })
+
+  it('starts with a default radius configured', function () {
+    expect(this.brain.radius).to.be.a('number')
+  })
+
   it('starts with a default place configured', function () {
     expect(this.brain.near).to.be.a('string')
   })

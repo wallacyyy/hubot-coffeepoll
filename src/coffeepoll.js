@@ -21,6 +21,7 @@ module.exports = function (bot) {
   var participants = {}
 
   brain.set('near', 'Berlin')
+  brain.set('radius', 500)
   brain.set('participants', participants)
   brain.set('options', options)
   brain.set('votes', votes)
@@ -45,6 +46,10 @@ module.exports = function (bot) {
     return typeof votes[vote] === 'undefined'
   }
 
+  var isRadiusNotValid = function (radius) {
+    return !(radius > 0)
+  }
+
   bot.respond(/coffeepoll near (.*)/i, function (res) {
     var place = res.match[1]
 
@@ -57,10 +62,12 @@ module.exports = function (bot) {
     if (!isPollNotStarted()) return res.send(messages.errorAlreadyStarted)
 
     var near = brain.get('near')
+    var radius = brain.get('radius')
+
     var params = {
       near: near,
       categoryId: messages.category,
-      radius: 1000
+      radius: radius
     }
 
     return foursquare.venues.search(params, function (error, payload) {
@@ -80,6 +87,15 @@ module.exports = function (bot) {
 
       return res.send(message)
     })
+  })
+
+  bot.respond(/coffeepoll radius (.*)/i, function (res) {
+    var radius = res.match[1]
+
+    if (isRadiusNotValid(radius)) return res.send(messages.errorRadiusNotValid)
+
+    brain.set('radius', parseInt(radius))
+    return res.send(messages.radiusUpdated(brain.get('radius')))
   })
 
   bot.respond(/coffeepoll vote (.*)/i, function (res) {
