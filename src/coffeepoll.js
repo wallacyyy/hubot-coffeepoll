@@ -50,7 +50,7 @@ module.exports = function (bot) {
     return !(radius > 0)
   }
 
-  bot.respond(/coffeepoll near (.*)/i, function (res) {
+  bot.respond(/(?:coffeepoll|coffepoll) near (.*)/i, function (res) {
     var place = res.match[1]
 
     brain.set('near', place)
@@ -58,7 +58,7 @@ module.exports = function (bot) {
     return res.send(messages.places(place))
   })
 
-  bot.respond(/coffeepoll start/i, function (res) {
+  bot.respond(/(?:coffeepoll|coffepoll) start/i, function (res) {
     if (!isPollNotStarted()) return res.send(messages.errorAlreadyStarted)
 
     var near = brain.get('near')
@@ -89,7 +89,7 @@ module.exports = function (bot) {
     })
   })
 
-  bot.respond(/coffeepoll radius (.*)/i, function (res) {
+  bot.respond(/(?:coffeepoll|coffepoll) radius (.*)/i, function (res) {
     var radius = res.match[1]
 
     if (isRadiusNotValid(radius)) return res.send(messages.errorRadiusNotValid)
@@ -98,7 +98,7 @@ module.exports = function (bot) {
     return res.send(messages.radiusUpdated(brain.get('radius')))
   })
 
-  bot.respond(/coffeepoll vote (.*)/i, function (res) {
+  bot.respond(/(?:coffeepoll|coffepoll) vote (.*)/i, function (res) {
     var username = res.message.user.name.toLowerCase()
     var number = res.match[1]
 
@@ -112,7 +112,7 @@ module.exports = function (bot) {
     return res.send(messages.thanks)
   })
 
-  bot.respond(/coffeepoll finish/i, function (res) {
+  bot.respond(/(?:coffeepoll|coffepoll) finish/i, function (res) {
     if (isPollNotStarted()) return res.send(messages.errorStart(bot.name))
 
     var greater = _.last(votes.slice().sort())
@@ -122,11 +122,11 @@ module.exports = function (bot) {
     return res.send(messages.win(winner))
   })
 
-  bot.respond(/coffeepoll help/i, function (res) {
+  bot.respond(/(?:coffeepoll|coffepoll) help/i, function (res) {
     return res.send(messages.help)
   })
 
-  bot.respond(/coffeepoll partial/i, function (res) {
+  bot.respond(/(?:coffeepoll|coffepoll) partial/i, function (res) {
     if (isPollNotStarted()) return res.send(messages.errorStart(bot.name))
 
     var message = messages.partial
