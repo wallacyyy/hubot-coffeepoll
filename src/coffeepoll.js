@@ -9,6 +9,11 @@
 //   hubot coffeepoll partial - Show the partial results
 //   hubot coffeepoll finish - Finish the poll
 
+if (process.env.NODE_ENV !== 'production') {
+  // eslint-disable-next-line global-require
+  require('dotenv').config();
+}
+
 const _ = require('lodash');
 const messages = require('../lib/messages');
 const venues = require('node-foursquare-venues');
