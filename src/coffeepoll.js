@@ -9,132 +9,123 @@
 //   hubot coffeepoll partial - Show the partial results
 //   hubot coffeepoll finish - Finish the poll
 
-var _ = require('lodash')
-var messages = require('../lib/messages')
-var foursquare = require('node-foursquare-venues')(process.env.FOURSQUARE_CLIENT_ID,
-                                                   process.env.FOURSQUARE_CLIENT_SECRET)
+const _ = require('lodash');
+const messages = require('../lib/messages');
+const venues = require('node-foursquare-venues');
 
-module.exports = function (bot) {
-  var brain = bot.brain
-  var options = []
-  var votes = []
-  var participants = {}
+const foursquare = venues(
+  process.env.FOURSQUARE_CLIENT_ID,
+  process.env.FOURSQUARE_CLIENT_SECRET
+);
 
-  brain.set('near', 'Berlin')
-  brain.set('radius', 500)
-  brain.set('participants', participants)
-  brain.set('options', options)
-  brain.set('votes', votes)
+module.exports = (bot) => {
+  const brain = bot.brain;
+  const options = [];
+  const votes = [];
+  const participants = {};
 
-  var clearPoll = function () {
-    options.length = 0
-    votes.length = 0
-    _.mapKeys(participants, function (v, k) {
-      delete participants[k]
-    })
-  }
+  brain.set('near', 'Berlin');
+  brain.set('radius', 500);
+  brain.set('participants', participants);
+  brain.set('options', options);
+  brain.set('votes', votes);
 
-  var isPollNotStarted = function () {
-    return _.isEmpty(options)
-  }
+  const clearPoll = () => {
+    options.length = 0;
+    votes.length = 0;
+    _.mapKeys(participants, (v, k) => {
+      delete participants[k];
+    });
+  };
 
-  var isUserAlreadyVoted = function (username) {
-    return participants[username]
-  }
+  const isPollNotStarted = () => _.isEmpty(options);
+  const isUserAlreadyVoted = username => participants[username];
+  const isVoteNotValid = vote => (typeof votes[vote] === 'undefined');
+  const isRadiusNotValid = radius => !(radius > 0);
 
-  var isVoteNotValid = function (vote) {
-    return typeof votes[vote] === 'undefined'
-  }
+  bot.respond(/(?:coffeepoll|coffepoll) near (.*)/i, (res) => {
+    const place = res.match[1];
 
-  var isRadiusNotValid = function (radius) {
-    return !(radius > 0)
-  }
+    brain.set('near', place);
 
-  bot.respond(/(?:coffeepoll|coffepoll) near (.*)/i, function (res) {
-    var place = res.match[1]
+    return res.send(messages.places(place));
+  });
 
-    brain.set('near', place)
+  bot.respond(/(?:coffeepoll|coffepoll) start/i, (res) => {
+    if (!isPollNotStarted()) return res.send(messages.errorAlreadyStarted);
 
-    return res.send(messages.places(place))
-  })
+    const near = brain.get('near');
+    const radius = brain.get('radius');
 
-  bot.respond(/(?:coffeepoll|coffepoll) start/i, function (res) {
-    if (!isPollNotStarted()) return res.send(messages.errorAlreadyStarted)
-
-    var near = brain.get('near')
-    var radius = brain.get('radius')
-
-    var params = {
-      near: near,
+    const params = {
+      near,
       categoryId: messages.category,
-      radius: radius
-    }
+      radius
+    };
 
-    return foursquare.venues.search(params, function (error, payload) {
-      if (error === 400) return res.send(messages.errorPlaceNotFound(near))
-      if (error) return res.send(error)
+    return foursquare.venues.search(params, (error, payload) => {
+      if (error === 400) return res.send(messages.errorPlaceNotFound(near));
+      if (error) return res.send(error);
 
-      var message = messages.hello(bot.name)
-      var coffeeShops = _.sample(payload.response.venues, 3)
+      let message = messages.hello(bot.name);
+      const coffeeShops = _.sample(payload.response.venues, 3);
 
-      for (var i = 0; i < coffeeShops.length; i++) {
-        var cs = coffeeShops[i]
-        message += i + ': ' + cs.name + ' (' + messages.url + cs.id + ')\n'
-        message += cs.location.address + '\n\n'
-        options[i] = cs
-        votes[i] = 0
+      for (let i = 0; i < coffeeShops.length; i += 1) {
+        const cs = coffeeShops[i];
+        message += `${i}: ${cs.name} (${messages.url}${cs.id})\n`;
+        message += `${cs.location.address}\n\n`;
+        options[i] = cs;
+        votes[i] = 0;
       }
 
-      return res.send(message)
-    })
-  })
+      return res.send(message);
+    });
+  });
 
-  bot.respond(/(?:coffeepoll|coffepoll) radius (.*)/i, function (res) {
-    var radius = res.match[1]
+  bot.respond(/(?:coffeepoll|coffepoll) radius (.*)/i, (res) => {
+    const radius = res.match[1];
 
-    if (isRadiusNotValid(radius)) return res.send(messages.errorRadiusNotValid)
+    if (isRadiusNotValid(radius)) return res.send(messages.errorRadiusNotValid);
 
-    brain.set('radius', parseInt(radius))
-    return res.send(messages.radiusUpdated(brain.get('radius')))
-  })
+    brain.set('radius', parseInt(radius, 10));
+    return res.send(messages.radiusUpdated(brain.get('radius')));
+  });
 
-  bot.respond(/(?:coffeepoll|coffepoll) vote (.*)/i, function (res) {
-    var username = res.message.user.name.toLowerCase()
-    var number = res.match[1]
+  bot.respond(/(?:coffeepoll|coffepoll) vote (.*)/i, (res) => {
+    const username = res.message.user.name.toLowerCase();
+    const number = res.match[1];
 
-    if (isUserAlreadyVoted(username)) return res.send(messages.errorAlreadyVoted(username))
-    if (isPollNotStarted()) return res.send(messages.errorStart(bot.name))
-    if (isVoteNotValid(number)) return res.send(messages.errorVoteNotFound)
+    if (isUserAlreadyVoted(username)) return res.send(messages.errorAlreadyVoted(username));
+    if (isPollNotStarted()) return res.send(messages.errorStart(bot.name));
+    if (isVoteNotValid(number)) return res.send(messages.errorVoteNotFound);
 
-    votes[number] += 1
-    participants[username] = true
+    votes[number] += 1;
+    participants[username] = true;
 
-    return res.send(messages.thanks)
-  })
+    return res.send(messages.thanks);
+  });
 
-  bot.respond(/(?:coffeepoll|coffepoll) finish/i, function (res) {
-    if (isPollNotStarted()) return res.send(messages.errorStart(bot.name))
+  bot.respond(/(?:coffeepoll|coffepoll) finish/i, (res) => {
+    if (isPollNotStarted()) return res.send(messages.errorStart(bot.name));
 
-    var greater = _.last(votes.slice().sort())
-    var winner = options[_.indexOf(votes, greater)]
-    clearPoll()
+    const greater = _.last(votes.slice().sort());
+    const winner = options[_.indexOf(votes, greater)];
+    clearPoll();
 
-    return res.send(messages.win(winner))
-  })
+    return res.send(messages.win(winner));
+  });
 
-  bot.respond(/(?:coffeepoll|coffepoll) help/i, function (res) {
-    return res.send(messages.help)
-  })
+  bot.respond(/(?:coffeepoll|coffepoll) help/i, res => res.send(messages.help));
 
-  bot.respond(/(?:coffeepoll|coffepoll) partial/i, function (res) {
-    if (isPollNotStarted()) return res.send(messages.errorStart(bot.name))
+  bot.respond(/(?:coffeepoll|coffepoll) partial/i, (res) => {
+    if (isPollNotStarted()) return res.send(messages.errorStart(bot.name));
 
-    var message = messages.partial
+    let message = messages.partial;
 
-    for (var i = 0; i < options.length; i++) {
-      message += options[i].name + ': ' + votes[i] + ' vote(s)\n'
+    for (let i = 0; i < options.length; i += 1) {
+      message += `${options[i].name}: ${votes[i]} vote(s)\n`;
     }
 
-    return res.send(message)
-  })
-}
+    return res.send(message);
+  });
+};

@@ -1,17 +1,16 @@
-var fs = require('fs')
-var path = require('path')
+const fs = require('fs');
+const path = require('path');
 
-module.exports = function (robot) {
-  var scriptsPath = path.resolve(__dirname, 'src')
+module.exports = (robot) => {
+  const scriptsPath = path.resolve(__dirname, 'src');
 
-  fs.exists(scriptsPath, function (exists) {
+  fs.exists(scriptsPath, (exists) => {
     if (exists) {
-      var ref = fs.readdirSync(scriptsPath)
+      const ref = fs.readdirSync(scriptsPath);
 
-      for (var i = 0; i < ref.length; i++) {
-        var script = ref[i]
-        robot.loadFile(scriptsPath, script)
+      for (let i = 0; i < ref.length; i += 1) {
+        robot.loadFile(scriptsPath, ref[i]);
       }
     }
-  })
-}
+  });
+};
