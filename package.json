@@ -45,7 +45,6 @@
   "devDependencies": {
     "chai": "^2.1.1",
     "coffee-script": "1.6.3",
-    "dotenv": "^4.0.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.3.0",

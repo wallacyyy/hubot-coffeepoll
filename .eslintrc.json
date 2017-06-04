@@ -4,6 +4,7 @@
     "import"
   ],
   "rules": {
+    "import/newline-after-import": 0,
     "comma-dangle": ["error", "never"],
     "import/no-extraneous-dependencies": [
       "error",
@@ -13,5 +14,12 @@
          "peerDependencies": false
        }
      ]
+  },
+  "globals": {
+    "context": true,
+    "it": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "describe": true
   }
 }
