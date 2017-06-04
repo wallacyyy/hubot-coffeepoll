@@ -44,8 +44,7 @@ module.exports = (bot) => {
 
   const isVoteInvalid = voteIndex => (
     R.pipe(
-      () => brain.get('votes'),
-      votes => votes[voteIndex],
+      R.flip(R.prop)(brain.get('votes')),
       R.isNil
     )(voteIndex)
   );
