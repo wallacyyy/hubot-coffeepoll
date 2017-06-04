@@ -5,7 +5,8 @@
   "license": "MIT",
   "description": "A hubot plugin to help your team to choose where to drink a coffee !",
   "scripts": {
-    "test": "mocha --compilers coffee:coffee-script"
+    "test": "mocha --compilers coffee:coffee-script",
+    "test:watch": "mocha --watch --bail --compilers coffee:coffee-script"
   },
   "repository": {
     "type": "git",
@@ -34,7 +35,8 @@
   },
   "dependencies": {
     "lodash": "^3.10.1",
-    "node-foursquare-venues": "^1.1.0"
+    "node-foursquare-venues": "^1.1.0",
+    "ramda": "^0.23.0"
   },
   "peerDependencies": {
     "hubot": "2.x"
@@ -43,6 +45,9 @@
   "devDependencies": {
     "chai": "^2.1.1",
     "coffee-script": "1.6.3",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.3.0",
     "hubot-test-helper": "0.0.7",
     "mocha": "^2.3.3",
     "nock": "^2.13.0"
