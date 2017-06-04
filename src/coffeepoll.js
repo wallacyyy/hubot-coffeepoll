@@ -125,6 +125,15 @@ module.exports = (bot) => {
     )
   );
 
+  const pickWinner = votes => (
+    R.pipe(
+      R.sortBy(R.identity),
+      R.last,
+      R.flip(R.indexOf)(votes),
+      R.flip(R.nth)(brain.get('options'))
+    )(votes)
+  );
+
   bot.respond(/(?:coffeepoll|coffepoll) near (.*)/i, res => (
     R.pipe(
       r => r.match[1],
@@ -199,15 +208,6 @@ module.exports = (bot) => {
       ]
     ])();
   });
-
-  const pickWinner = votes => (
-    R.pipe(
-      R.sort((a, b) => a - b),
-      R.last,
-      greater => R.indexOf(greater, votes),
-      idx => brain.get('options')[idx]
-    )(votes)
-  );
 
   bot.respond(/(?:coffeepoll|coffepoll) finish/i, (res) => {
     R.ifElse(
