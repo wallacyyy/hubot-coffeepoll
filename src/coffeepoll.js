@@ -1,3 +1,4 @@
+
 const R = require('ramda');
 const _ = require('lodash');
 const messages = require('../lib/messages');
@@ -59,23 +60,20 @@ module.exports = (bot) => {
 
   const handleVenues = (sample, res) => {
     R.pipe(
-      smp => (
-        R.reduce(
-          (acc, cs) => {
-            acc.message += `\n${sample.indexOf(cs)}: ${cs.name} (${messages.url}${cs.id})\n`;
-            acc.message += `${cs.location.address}\n\n`;
-            acc.options.push(cs);
-            acc.votes.push(0);
+      R.reduce(
+        (acc, cs) => {
+          acc.message += `\n${sample.indexOf(cs)}: ${cs.name} (${messages.url}${cs.id})\n`;
+          acc.message += `${cs.location.address}\n\n`;
+          acc.options.push(cs);
+          acc.votes.push(0);
 
-            return acc;
-          },
-          {
-            options: [],
-            votes: [],
-            message: ''
-          },
-          smp
-        )
+          return acc;
+        },
+        {
+          options: [],
+          votes: [],
+          message: ''
+        }
       ),
       (st) => {
         brain.set('options', st.options);
