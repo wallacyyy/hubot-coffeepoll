@@ -30,16 +30,19 @@ const INITIAL_STATE = {
  */
 module.exports = (bot) => {
   const { brain } = bot;
+  const currySet = R.curry((k, v) => brain.set(k, v));
 
   brain.set(INITIAL_STATE);
 
-  const isPollStarted = R.pipe(() => brain.get('options'), o => R.gt(o.length, 0));
+  const isPollStarted = () => (
+    R.pipe(
+      R.length,
+      R.flip(R.gt)(0)
+    )(brain.get('options'))
+  );
 
   const isUserAlreadyVoted = username => (
-    R.pipe(
-      () => brain.get('participants'),
-      p => !!R.prop(username, p)
-    )()
+    R.prop(username, brain.get('participants'))
   );
 
   const isVoteInvalid = voteIndex => (
@@ -49,15 +52,20 @@ module.exports = (bot) => {
     )(voteIndex)
   );
 
+  const setRadius = R.curry((res, roundedRadius) => {
+    brain.set('radius', roundedRadius);
+    res.send(messages.radiusUpdated(roundedRadius));
+  });
+
   const handleSearchError = (error, near, res) => (
     R.ifElse(
-      e => R.equals(e, 400),
+      R.flip(R.equals)(400),
       () => res.send(messages.errorPlaceNotFound(near)),
       () => res.send(error)
     )(error)
   );
 
-  const handleVenues = (sample, res) => {
+  const handleVenues = (sample, res) => (
     R.pipe(
       R.reduce(
         (acc, cs) => {
@@ -79,8 +87,8 @@ module.exports = (bot) => {
         brain.set('votes', st.votes);
         res.send(st.message);
       }
-    )(sample);
-  };
+    )(sample)
+  );
 
   const searchVenues = params => (
     new Promise((resolve, reject) => (
@@ -96,20 +104,18 @@ module.exports = (bot) => {
 
   const updateVotes = voteIndex => (
     R.pipe(
-      () => brain.get('votes'),
-      v => R.adjust(R.add(1), voteIndex, v),
-      incV => brain.set('votes', incV)
-    )()
+      R.adjust(R.add(1), voteIndex),
+      currySet('votes')
+    )(brain.get('votes'))
   );
 
   const updateParticipants = (username, res) => (
     R.pipe(
-      () => brain.get('participants'),
-      p => R.update(true, username, p),
-      p => R.merge(p, { [username]: true }),
-      updated => brain.set('participants', updated),
+      R.update(true, username),
+      R.flip(R.merge)({ [username]: true }),
+      currySet('participants'),
       () => res.send(messages.thanks)
-    )()
+    )(brain.get('participants'))
   );
 
   const buildPartial = data => (
@@ -134,30 +140,26 @@ module.exports = (bot) => {
     )(votes)
   );
 
-  bot.respond(/(?:coffeepoll|coffepoll) near (.*)/i, res => (
-    R.pipe(
-      r => r.match[1],
-      (place) => {
-        brain.set('near', place);
-        res.send(messages.places(place));
-      }
-    )(res)
-  ));
+  bot.respond(/(?:coffeepoll|coffepoll) near (.*)/i, (res) => {
+    const place = res.match[1];
 
-  bot.respond(/(?:coffeepoll|coffepoll) radius (.*)/i, res => (
-    R.pipe(
-      r => r.match[1],
-      radius => R.ifElse(
-        r => R.gt(r, 0),
-        () => {
-          const roundedRadius = Math.round(parseInt(radius, 10));
-          brain.set('radius', roundedRadius);
-          res.send(messages.radiusUpdated(roundedRadius));
-        },
-        () => res.send(messages.errorRadiusNotValid)
-      )(radius)
-    )(res)
-  ));
+    brain.set('near', place);
+    res.send(messages.places(place));
+  });
+
+  bot.respond(/(?:coffeepoll|coffepoll) radius (.*)/i, (res) => {
+    const radius = res.match[1];
+
+    R.ifElse(
+      R.flip(R.gt)(0),
+      R.pipe(
+        R.curry(R.flip(parseInt))(10),
+        R.curry(Math.round),
+        setRadius(res)
+      ),
+      () => res.send(messages.errorRadiusNotValid)
+    )(radius);
+  });
 
   bot.respond(/(?:coffeepoll|coffepoll) start/i, (res) => {
     const params = {
@@ -216,13 +218,11 @@ module.exports = (bot) => {
         R.not
       ),
       () => res.send(messages.errorStart(bot.name)),
-      () => (
-        R.pipe(
-          () => brain.get('votes'),
-          pickWinner,
-          winner => res.send(messages.win(winner)),
-          () => brain.set(INITIAL_STATE)
-        )()
+      R.pipe(
+        () => brain.get('votes'),
+        pickWinner,
+        winner => res.send(messages.win(winner)),
+        () => brain.set(INITIAL_STATE)
       )
     )();
   });
@@ -244,7 +244,7 @@ module.exports = (bot) => {
       () => (
         R.pipe(
           buildPartial,
-          partial => res.send(partial)
+          R.curry(res.send)
         )(data)
       )
     )();
