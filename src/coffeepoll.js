@@ -1,4 +1,3 @@
-
 const R = require('ramda');
 const _ = require('lodash');
 const messages = require('../lib/messages');
@@ -235,7 +234,7 @@ module.exports = (bot) => {
       votes: brain.get('votes')
     };
 
-    return R.ifElse(
+    R.ifElse(
       R.pipe(
         isPollStarted,
         R.not
